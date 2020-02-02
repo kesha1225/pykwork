@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import kwork
 
 setup(
-    name="kumquat",
+    name="pykwork",
     version=kwork.__version__,
     url="https://github.com/kesha1225/pykwork",
     author="kesha1225",

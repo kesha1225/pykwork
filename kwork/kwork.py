@@ -9,7 +9,7 @@ import websockets
 import fake_useragent
 import aiohttp
 
-from kwork.types import (
+from .types import (
     User,
     Actor,
     Dialog,
