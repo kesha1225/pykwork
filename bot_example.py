@@ -37,7 +37,7 @@ async def bot_handler(message: Message):
 @bot.message_handler(text="привет")
 async def bot_handler(message: Message):
     """
-    Отвечаем только если текст выглядит так же как параметр text
+    Отвечаем только если текст такой же как параметр text
     :param message:
     :return:
     """

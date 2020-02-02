@@ -16,10 +16,11 @@ pip install https://github.com/kesha1225/pykwork/archive/master.zip --upgrade
 
 ## Обзор
 
-Список доступных методов можно посмотреть [здесь](./api_example)
+Список доступных методов можно посмотреть [здесь](./api_example.py)
 
 Пример простого api запроса:
-```
+
+```python3
 from kwork import Kwork
 from kwork.types import Actor
 import logging
@@ -40,7 +41,7 @@ loop.run_until_complete(main())
 
 ```
 
-#### pykwork предоставляет возможность создания ботов для мгновенных ответов потециальным покупателям
+### pykwork предоставляет возможность создания ботов для мгновенных ответов потециальным покупателям
 
 
 Пример бота с тремя хендлерами для ответов:
@@ -55,16 +56,10 @@ logging.basicConfig(level=logging.INFO)
 
 bot = KworkBot(login="login", password="password")
 
-
-# Можно использовать socks5 прокси
-# bot = KworkBot(login="login", password="password", proxy="socks5://64.90.53.198:46088")
-
 @bot.message_handler(on_start=True)
 async def simple_handle(message: Message):
     """
     Отвечаем только если это первое сообщение от юзера
-    :param message:
-    :return:
     """
     text = ("Здравствуйте, рад что вы обратились именно ко мне,"
             " опишите ваше желание подробнее!")
@@ -75,8 +70,6 @@ async def simple_handle(message: Message):
 async def bot_handler(message: Message):
     """
     Отвечаем если текст сообщения содержит слово бот
-    :param message:
-    :return:
     """
     text = "Вам нужен бот? Можете посмотреть на примеры уже сделанных:..."
     await message.answer_simulation(text)
@@ -85,9 +78,7 @@ async def bot_handler(message: Message):
 @bot.message_handler(text="привет")
 async def bot_handler(message: Message):
     """
-    Отвечаем только если текст выглядит так же как параметр text
-    :param message:
-    :return:
+    Отвечаем только если текст такой же как параметр text
     """
     text = "И вам привет!"
     await message.answer_simulation(text)
@@ -96,7 +87,6 @@ async def bot_handler(message: Message):
 async def run():
     """
     Запускаем бота
-    :return:
     """
     await bot.run_bot()
 
