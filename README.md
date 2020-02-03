@@ -6,7 +6,7 @@
 
 Стабильная версия:
 ```
-pip install pykwork
+pip install kwork
 ```
 
 Последняя версия:
