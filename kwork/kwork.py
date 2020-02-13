@@ -6,7 +6,6 @@ import urllib.parse
 import collections
 
 import websockets
-import fake_useragent
 import aiohttp
 
 from .types import (
@@ -18,6 +17,8 @@ from .types import (
     BaseEvent,
     Notify,
     EventType,
+    Category,
+    Project,
 )
 from kwork.exceptions import KworkException, KworkBotException
 
@@ -43,7 +44,6 @@ class Kwork:
 
         self.session = aiohttp.ClientSession(connector=connector)
         self.host = "https://api.kwork.ru/{}"
-        self.user_agent = fake_useragent.UserAgent().random
         self.login = login
         self.password = password
         self._token = None
@@ -179,6 +179,31 @@ class Kwork:
         return await self.api_request(
             method="post", api_method="notifications", token=await self.token,
         )
+
+    async def get_categories(self) -> typing.List[Category]:
+        raw_categories = await self.api_request(
+            method="post", api_method="categories", type="1", token=await self.token,
+        )
+        categories = []
+        for dict_category in raw_categories["response"]:
+            category = Category(**dict_category)
+            categories.append(category)
+        return categories
+
+    async def get_projects(
+        self, categories_ids: typing.List[int]
+    ) -> typing.List[Project]:
+        raw_projects = await self.api_request(
+            method="post",
+            api_method="projects",
+            categories="%2C".join(str(category) for category in categories_ids),
+            token=await self.token,
+        )
+        projects = []
+        for dict_project in raw_projects["response"]:
+            project = Project(**dict_project)
+            projects.append(project)
+        return projects
 
     async def _get_channel(self) -> str:
         channel = await self.api_request(

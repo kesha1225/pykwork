@@ -10,6 +10,6 @@ setup(
     description="simple wrapper for kwork.ru",
     long_description=open("README.md", encoding='utf-8').read(),
     long_description_content_type="text/markdown",
-    install_requires=["aiohttp", "pydantic", "websockets", "fake_useragent"],
+    install_requires=["aiohttp", "pydantic", "websockets"],
     python_requires='>=3.7',
 )
