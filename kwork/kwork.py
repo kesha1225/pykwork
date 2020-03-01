@@ -30,7 +30,7 @@ Handler = collections.namedtuple(
 
 class Kwork:
     def __init__(self, login: str, password: str, proxy: str = None):
-        connector = None
+        connector: typing.Optional[aiohttp.BaseConnector] = None
 
         if proxy is not None:
             try:
@@ -46,7 +46,7 @@ class Kwork:
         self.host = "https://api.kwork.ru/{}"
         self.login = login
         self.password = password
-        self._token = None
+        self._token: typing.Optional[str] = None
 
     @property
     async def token(self) -> str:
@@ -54,7 +54,7 @@ class Kwork:
             self._token = await self.get_token()
         return self._token
 
-    async def api_request(self, method: str, api_method: str, **params) -> dict:
+    async def api_request(self, method: str, api_method: str, **params) -> typing.Union[dict, typing.NoReturn]:
         logging.debug(
             f"making {method} request on /{api_method} with params - {params}"
         )
@@ -65,9 +65,9 @@ class Kwork:
             params=params,
         ) as resp:
             if resp.content_type != "application/json":
-                error_text = await resp.text()
+                error_text: str = await resp.text()
                 raise KworkException(error_text)
-            json_response = await resp.json()
+            json_response: dict = await resp.json()
             if not json_response["success"]:
                 raise KworkException(json_response["error"])
             logging.debug(f"result of request on /{api_method} - {json_response}")
