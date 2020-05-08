@@ -1,5 +1,7 @@
-from pydantic import BaseModel, validator
 import typing
+
+from pydantic import BaseModel, validator
+
 
 
 class Subcategory(BaseModel):
@@ -15,7 +17,7 @@ def normalize_subcategories(subcategories: typing.List[dict]):
 class Category(BaseModel):
     id: int
     name: str
-    description: str
+    description: typing.Optional[str]
     subcategories: typing.List[dict]
 
     _normalize_subcategories = validator("subcategories", allow_reuse=True)(
