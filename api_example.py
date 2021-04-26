@@ -9,6 +9,9 @@ logging.basicConfig(level=logging.INFO)
 async def main():
     api = Kwork(login="login", password="password")
 
+    # Если "Необходимо ввести последние 4 цифры номера телефона."
+    # api = Kwork(login="login", password="password", phone_last="0102")
+
     # Можно использовать socks5 прокси
     # api = Kwork(login="login", password="password", proxy="socks5://208.113.220.250:3420")
 

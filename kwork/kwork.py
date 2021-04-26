@@ -29,7 +29,13 @@ Handler = collections.namedtuple(
 
 
 class Kwork:
-    def __init__(self, login: str, password: str, proxy: str = None):
+    def __init__(
+        self,
+        login: str,
+        password: str,
+        proxy: typing.Optional[str] = None,
+        phone_last: typing.Optional[str] = None,
+    ):
         connector: typing.Optional[aiohttp.BaseConnector] = None
 
         if proxy is not None:
@@ -47,6 +53,7 @@ class Kwork:
         self.login = login
         self.password = password
         self._token: typing.Optional[str] = None
+        self.phone_last = phone_last
 
     @property
     async def token(self) -> str:
@@ -54,7 +61,10 @@ class Kwork:
             self._token = await self.get_token()
         return self._token
 
-    async def api_request(self, method: str, api_method: str, **params) -> typing.Union[dict, typing.NoReturn]:
+    async def api_request(
+        self, method: str, api_method: str, **params
+    ) -> typing.Union[dict, typing.NoReturn]:
+        params = {k: v for k, v in params.items() if v is not None}
         logging.debug(
             f"making {method} request on /{api_method} with params - {params}"
         )
@@ -82,6 +92,7 @@ class Kwork:
             api_method="signIn",
             login=self.login,
             password=self.password,
+            phone_last=self.phone_last
         )
         return resp["response"]["token"]
 
