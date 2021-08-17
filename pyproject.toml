@@ -8,7 +8,7 @@ authors = ["kesha1225"]
 python = "^3.7"
 aiohttp = "^3.6.2"
 pydantic = "^1.4"
-websockets = "^8.1"
+websockets = "^9.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
