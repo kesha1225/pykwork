@@ -1,4 +1,10 @@
+from typing import List, Optional
+
 from pydantic import BaseModel
+
+from kwork.types.achievement import Achievement
+from kwork.types.kwork_object import KworkObject
+from kwork.types.review import Review
 
 
 class User(BaseModel):
@@ -27,3 +33,12 @@ class User(BaseModel):
     blocked_by_user: bool = None
     allowedDialog: bool = None
     addtime: int = None
+    achievments_list: List[Achievement] = None
+    completed_orders_count: int
+    specialization: Optional[str] = None
+    profession: Optional[str] = None
+    kworks_count: int
+    kworks: List[KworkObject]
+    portfolio_list: Optional[str] = None
+    reviews: Optional[List[Review]] = None
+

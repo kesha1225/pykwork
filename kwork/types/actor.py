@@ -3,6 +3,8 @@ from typing import Optional, List
 from pydantic import BaseModel, Field
 
 from kwork.types.achievement import Achievement
+from kwork.types.kwork_object import KworkObject
+from kwork.types.review import Review
 
 
 class Actor(BaseModel):
@@ -50,9 +52,9 @@ class Actor(BaseModel):
     kworks_available_at_weekends: bool = None
     achievments_list: List[Achievement] = None
     completed_orders_count: int = None
-    kworks: List = None  # TODo
+    kworks: List[KworkObject] = None
     portfolio_list: Optional[str] = None
-    reviews: Optional[List] = None  # TODo
+    reviews: Optional[List[Review]] = None
     worker_status: str = None
     has_offers: bool = None
     wants_count: int = None
