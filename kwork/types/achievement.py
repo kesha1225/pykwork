@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class Achievement(BaseModel):
-    id: int
-    name: str
-    description: str
-    image_url: str
+    id: int = None
+    name: str = None
+    description: str = None
+    image_url: str = None

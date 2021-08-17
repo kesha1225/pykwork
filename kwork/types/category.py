@@ -4,9 +4,9 @@ from pydantic import BaseModel, validator
 
 
 class Subcategory(BaseModel):
-    id: int
-    name: str
-    description: typing.Optional[str]
+    id: int = None
+    name: str = None
+    description: typing.Optional[str] = None
 
 
 def normalize_subcategories(subcategories: typing.List[dict]):
@@ -14,10 +14,10 @@ def normalize_subcategories(subcategories: typing.List[dict]):
 
 
 class Category(BaseModel):
-    id: int
-    name: str
-    description: typing.Optional[str]
-    subcategories: typing.List[typing.Union[dict, Subcategory]]
+    id: int = None
+    name: str = None
+    description: typing.Optional[str] = None
+    subcategories: typing.List[typing.Union[dict, Subcategory]] = None
 
     _normalize_subcategories = validator("subcategories", allow_reuse=True)(
         normalize_subcategories

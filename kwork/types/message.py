@@ -4,23 +4,23 @@ import asyncio
 
 
 class MessageModel(BaseModel):
-    message_id: int
-    to_id: int
-    to_username: str
-    to_live_date: int
-    from_id: int
-    from_username: str
-    from_live_date: int
-    from_profilepicture: str
-    message: str
-    time: int
-    unread: bool
-    type: typing.Optional[str]
-    status: str
-    created_order_id: typing.Optional[str]
-    forwarded: bool
-    updated_at: typing.Optional[int]
-    message_page: int
+    message_id: int = None
+    to_id: int = None
+    to_username: str = None
+    to_live_date: int = None
+    from_id: int = None
+    from_username: str = None
+    from_live_date: int = None
+    from_profilepicture: str = None
+    message: str = None
+    time: int = None
+    unread: bool = None
+    type: typing.Optional[str] = None
+    status: str = None
+    created_order_id: typing.Optional[str] = None
+    forwarded: bool = None
+    updated_at: typing.Optional[int] = None
+    message_page: int = None
 
 
 class Message:
