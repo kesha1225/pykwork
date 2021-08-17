@@ -18,7 +18,7 @@ from .types import (
     Notify,
     EventType,
     Category,
-    Project,
+    Project, Connects,
 )
 from kwork.exceptions import KworkException, KworkBotException
 
@@ -201,13 +201,24 @@ class Kwork:
             categories.append(category)
         return categories
 
-    async def get_projects(
-        self, categories_ids: typing.List[int]
-    ) -> typing.List[Project]:
+    async def get_connects(self) -> Connects:
         raw_projects = await self.api_request(
             method="post",
             api_method="projects",
-            categories="%2C".join(str(category) for category in categories_ids),
+            categories="",
+            token=await self.token,
+        )
+        return Connects(**raw_projects["connects"])
+
+    async def get_projects(
+        self, categories_ids: typing.List[int]
+    ) -> typing.List[Project]:
+        # TODO: pages
+
+        raw_projects = await self.api_request(
+            method="post",
+            api_method="projects",
+            categories=",".join(str(category) for category in categories_ids),
             token=await self.token,
         )
         projects = []

@@ -1,5 +1,5 @@
 from kwork import Kwork
-from kwork.types import User, Actor
+from kwork.types import User, Actor, Connects
 import logging
 import asyncio
 
@@ -22,6 +22,10 @@ async def main():
     user: User = await api.get_user(user_id=1456898)
     # Получения профиля юзера
     print(user)
+
+    connects: Connects = await api.get_connects()
+    # Получение ваших коннектов
+    print(connects)
 
     all_dialogs = await api.get_all_dialogs()
     # Получения всех диалогов на аккаунте
