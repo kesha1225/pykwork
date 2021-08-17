@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kwork"
-version = "0.0.4"
+version = "0.0.5"
 description = "simple async wrapper for kwork.ru"
 authors = ["kesha1225"]
 
