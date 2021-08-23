@@ -29,10 +29,10 @@ class Message:
         api,
         from_id: int,
         text: str,
-        to_user_id: int,
-        inbox_id: int,
-        title: str,
-        last_message: dict,
+        to_user_id: typing.Optional[int] = None,
+        inbox_id: typing.Optional[int] = None,
+        last_message: typing.Optional[dict] = None,
+        title: typing.Optional[str] = None,
     ):
         self.api = api
         self.from_id = from_id

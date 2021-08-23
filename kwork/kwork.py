@@ -18,7 +18,8 @@ from .types import (
     Notify,
     EventType,
     Category,
-    Project, Connects,
+    Project,
+    Connects,
 )
 from kwork.exceptions import KworkException, KworkBotException
 
@@ -92,7 +93,7 @@ class Kwork:
             api_method="signIn",
             login=self.login,
             password=self.password,
-            phone_last=self.phone_last
+            phone_last=self.phone_last,
         )
         return resp["response"]["token"]
 
@@ -188,12 +189,17 @@ class Kwork:
 
     async def get_notifications(self) -> dict:
         return await self.api_request(
-            method="post", api_method="notifications", token=await self.token,
+            method="post",
+            api_method="notifications",
+            token=await self.token,
         )
 
     async def get_categories(self) -> typing.List[Category]:
         raw_categories = await self.api_request(
-            method="post", api_method="categories", type="1", token=await self.token,
+            method="post",
+            api_method="categories",
+            type="1",
+            token=await self.token,
         )
         categories = []
         for dict_category in raw_categories["response"]:
@@ -278,6 +284,10 @@ class KworkBot(Kwork):
                     json_event_data = json.loads(json_event["text"])
 
                     event: BaseEvent = BaseEvent(**json_event_data)
+                    if event.event in [EventType.IS_TYPING]:
+                        continue
+
+                    print(event.event)
 
                     if event.event == EventType.NEW_MESSAGE:
                         message: Message = Message(
@@ -294,9 +304,49 @@ class KworkBot(Kwork):
                         event.event == EventType.NOTIFY
                         and event.data.get(Notify.NEW_MESSAGE) is not None
                     ):
+                        if event.data.get("dialog_data") is None:
+                            dialogs_page = await self.api_request(
+                                method="post",
+                                api_method="dialogs",
+                                filter="all",
+                                page=1,
+                                token=await self.token,
+                            )
+                            last_dialog = Dialog(**dialogs_page["response"][0])
+
+                            from_id, text, to_user_id, inbox_id = (
+                                last_dialog.user_id,
+                                last_dialog.last_message,
+                                None,
+                                None,
+                            )
+                        else:
+                            # TODO: вынести логику
+                            message_raw: MessageModel = (
+                                await self.get_dialog_with_user(
+                                    event.data["dialog_data"][0]["login"]
+                                )
+                            )[0]
+
+                            from_id, text, to_user_id, inbox_id = (
+                                message_raw.from_id,
+                                message_raw.message,
+                                message_raw.to_id,
+                                message_raw.message_id,
+                            )
+                        message: Message = Message(
+                            api=self,
+                            from_id=from_id,
+                            text=text,
+                            to_user_id=to_user_id,
+                            inbox_id=inbox_id,
+                        )
+                        yield message
+
+                    elif event.event == EventType.POP_UP_NOTIFY:
                         message_raw: MessageModel = (
                             await self.get_dialog_with_user(
-                                event.data["dialog_data"][0]["login"]
+                                event.data["pop_up_notify"]["data"]["username"]
                             )
                         )[0]
                         message: Message = Message(
@@ -305,8 +355,6 @@ class KworkBot(Kwork):
                             text=message_raw.message,
                             to_user_id=message_raw.to_id,
                             inbox_id=message_raw.message_id,
-                            title="",
-                            last_message={},
                         )
                         yield message
             except KworkException as e:
@@ -332,7 +380,11 @@ class KworkBot(Kwork):
             current_dialog = await self.get_dialog_with_user(from_username)
             if len(current_dialog) == 1:
                 return handler.func
-        elif handler is not None and handler.text.lower() == message.text.lower():
+        elif (
+            handler is not None
+            and handler.text is not None
+            and handler.text.lower() == message.text.lower()
+        ):
             return handler.func
         elif handler.text_contains is not None and self._dispatch_text_contains(
             handler.text_contains, message.text

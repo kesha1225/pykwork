@@ -20,6 +20,8 @@ async def simple_handle(message: Message):
     """
     text = ("Здравствуйте, рад что вы обратились именно ко мне,"
             " опишите ваше желание подробнее!")
+
+    # await message.fast_answer(text) быстрый ответ без симуляции
     await message.answer_simulation(text)
 
 
