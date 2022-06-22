@@ -287,8 +287,6 @@ class KworkBot(Kwork):
                     if event.event in [EventType.IS_TYPING]:
                         continue
 
-                    print(event.event)
-
                     if event.event == EventType.NEW_MESSAGE:
                         message: Message = Message(
                             api=self,

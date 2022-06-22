@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 from kwork.types.achievement import Achievement
 from kwork.types.kwork_object import KworkObject
+from kwork.types.portfolio import PortfolioItem
 from kwork.types.review import Review
 
 
@@ -53,7 +54,7 @@ class Actor(BaseModel):
     achievments_list: List[Achievement] = None
     completed_orders_count: int = None
     kworks: List[KworkObject] = None
-    portfolio_list: Optional[str] = None
+    portfolio_list: List[PortfolioItem] = None
     reviews: Optional[List[Review]] = None
     worker_status: str = None
     has_offers: bool = None
@@ -61,3 +62,4 @@ class Actor(BaseModel):
     offers_count: int = None
     archived_wants_count: int = None
     push_notifications_sound_allowed: bool = Field(None, alias="pushNotificationsSoundAllowed")
+    black_friday_for_sellers: bool = None
