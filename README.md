@@ -1,4 +1,4 @@
-# pykwork
+cd # pykwork
 
 Простая асинхронная обёртка над закрытым api для фриланс биржи kwork.ru
 
@@ -133,4 +133,4 @@ api = Kwork(login="login", password="password", phone_last="0102")
 ```
 
 Если вдруг какие - то методы перестанут работать или работают неправильно -
-пишите отчёты в issue или мне в [вк](https://vk.com/aiohttp)
+пишите отчёты в issue
