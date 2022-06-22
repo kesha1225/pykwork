@@ -1,6 +1,14 @@
-cd # pykwork
-
 Простая асинхронная обёртка над закрытым api для фриланс биржи kwork.ru
+
+
+https://api.kwork.ru/
+все доступные методы тут, можно запрашивать их через api_request
+```python3
+await self.api_request(
+            method="post", api_method="actor", token=await self.token
+)
+```
+
 
 ## Установка
 
