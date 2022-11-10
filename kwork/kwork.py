@@ -1,4 +1,3 @@
-import typing
 import json
 import logging
 import asyncio
@@ -8,19 +7,8 @@ import collections
 import websockets
 import aiohttp
 
-from .types import (
-    User,
-    Actor,
-    Dialog,
-    MessageModel,
-    Message,
-    BaseEvent,
-    Notify,
-    EventType,
-    Category,
-    Project,
-    Connects,
-)
+from .types import Message, Actor, EventType, BaseEvent, Notify
+from .types.all import *
 from kwork.exceptions import KworkException, KworkBotException
 
 logger = logging.getLogger(__name__)
@@ -122,9 +110,9 @@ class Kwork:
         )
         return resp
 
-    async def get_all_dialogs(self) -> typing.List[Dialog]:
+    async def get_all_dialogs(self) -> typing.List[DialogMessage]:
         page = 1
-        dialogs: typing.List[Dialog] = []
+        dialogs: typing.List[DialogMessage] = []
 
         while True:
             dialogs_page = await self.api_request(
@@ -138,7 +126,7 @@ class Kwork:
                 break
 
             for dialog in dialogs_page["response"]:
-                dialogs.append(Dialog(**dialog))
+                dialogs.append(DialogMessage(**dialog))
             page += 1
 
         return dialogs
@@ -148,9 +136,9 @@ class Kwork:
             method="post", api_method="offline", token=await self.token
         )
 
-    async def get_dialog_with_user(self, user_name: str) -> typing.List[MessageModel]:
+    async def get_dialog_with_user(self, user_name: str) -> typing.List[InboxMessage]:
         page = 1
-        dialog: typing.List[MessageModel] = []
+        dialog: typing.List[InboxMessage] = []
 
         while True:
             messages_dict: dict = await self.api_request(
@@ -163,7 +151,7 @@ class Kwork:
             if not messages_dict.get("response"):
                 break
             for message in messages_dict["response"]:
-                dialog.append(MessageModel(**message))
+                dialog.append(InboxMessage(**message))
 
             if page == messages_dict["paging"]["pages"]:
                 break
@@ -218,7 +206,7 @@ class Kwork:
 
     async def get_projects(
         self, categories_ids: typing.List[int]
-    ) -> typing.List[Project]:
+    ) -> typing.List[WantWorker]:
         # TODO: pages
 
         raw_projects = await self.api_request(
@@ -229,7 +217,7 @@ class Kwork:
         )
         projects = []
         for dict_project in raw_projects["response"]:
-            project = Project(**dict_project)
+            project = WantWorker(**dict_project)
             projects.append(project)
         return projects
 
@@ -310,7 +298,7 @@ class KworkBot(Kwork):
                                 page=1,
                                 token=await self.token,
                             )
-                            last_dialog = Dialog(**dialogs_page["response"][0])
+                            last_dialog = DialogMessage(**dialogs_page["response"][0])
 
                             from_id, text, to_user_id, inbox_id = (
                                 last_dialog.user_id,
@@ -320,7 +308,7 @@ class KworkBot(Kwork):
                             )
                         else:
                             # TODO: вынести логику
-                            message_raw: MessageModel = (
+                            message_raw: InboxMessage = (
                                 await self.get_dialog_with_user(
                                     event.data["dialog_data"][0]["login"]
                                 )
@@ -342,7 +330,7 @@ class KworkBot(Kwork):
                         yield message
 
                     elif event.event == EventType.POP_UP_NOTIFY:
-                        message_raw: MessageModel = (
+                        message_raw: InboxMessage = (
                             await self.get_dialog_with_user(
                                 event.data["pop_up_notify"]["data"]["username"]
                             )

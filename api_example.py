@@ -1,5 +1,6 @@
 from kwork import Kwork
-from kwork.types import User, Actor, Connects
+from kwork.types.all import User, Connects
+from kwork.types import Actor
 import logging
 import asyncio
 
