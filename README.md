@@ -19,15 +19,16 @@ await self.api_request(
 
 ## Установка
 
-Стабильная версия:
+Последняя версия (рекомендуется):
+```
+pip install https://github.com/kesha1225/pykwork/archive/master.zip --upgrade
+```
+
+Версия на pypi (может быть устаревшей):
 ```
 pip install kwork
 ```
 
-Последняя версия:
-```
-pip install https://github.com/kesha1225/pykwork/archive/master.zip --upgrade
-```
 
 ## Обзор
 
