@@ -143,7 +143,7 @@ loop.run_until_complete(main())
 ``` 
 
 Получая ошибку "Необходимо ввести последние 4 цифры номера телефона." используйте параметр phone_last
-```
+```python3
 api = Kwork(login="login", password="password", phone_last="0102")
 ```
 
