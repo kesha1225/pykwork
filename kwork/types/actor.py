@@ -61,5 +61,7 @@ class Actor(BaseModel):
     wants_count: int = None
     offers_count: int = None
     archived_wants_count: int = None
-    push_notifications_sound_allowed: bool = Field(None, alias="pushNotificationsSoundAllowed")
+    push_notifications_sound_allowed: bool = Field(
+        None, alias="pushNotificationsSoundAllowed"
+    )
     black_friday_for_sellers: bool = None

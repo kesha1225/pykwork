@@ -11,6 +11,7 @@ bot = KworkBot(login="login", password="password")
 # Можно использовать socks5 прокси
 # bot = KworkBot(login="login", password="password", proxy="socks5://64.90.53.198:46088")
 
+
 @bot.message_handler(on_start=True)
 async def simple_handle(message: Message):
     """
@@ -18,8 +19,10 @@ async def simple_handle(message: Message):
     :param message:
     :return:
     """
-    text = ("Здравствуйте, рад что вы обратились именно ко мне,"
-            " опишите ваше желание подробнее!")
+    text = (
+        "Здравствуйте, рад что вы обратились именно ко мне,"
+        " опишите ваше желание подробнее!"
+    )
 
     # await message.fast_answer(text) быстрый ответ без симуляции
     await message.answer_simulation(text)

@@ -41,4 +41,3 @@ class User(BaseModel):
     kworks: List[KworkObject]
     portfolio_list: Optional[str] = None
     reviews: Optional[List[Review]] = None
-

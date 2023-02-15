@@ -3,6 +3,7 @@ import logging
 import asyncio
 import urllib.parse
 import collections
+from typing import Optional, Union
 
 import websockets
 import aiohttp
@@ -205,14 +206,39 @@ class Kwork:
         return Connects(**raw_projects["connects"])
 
     async def get_projects(
-        self, categories_ids: typing.List[int]
+        self,
+        categories_ids: typing.List[Union[int, str]],
+        price_from: Optional[int] = None,
+        price_to: Optional[int] = None,
+        hiring_from: Optional[int] = None,
+        kworks_filter_from: Optional[int] = None,
+        kworks_filter_to: Optional[int] = None,
+        page: Optional[int] = None,
+        query: Optional[str] = None,
     ) -> typing.List[WantWorker]:
-        # TODO: pages
+        """
+        categories_ids - Список ID рубрик через запятую, либо 'all' - для выборки по всем рубрикам.
+         С пустым значением делает выборку по любимым рубрикам.
+        price_from - Бюджет от (включительно)
+        price_to - Бюджет до (включительно)
+        hiring_from - Процент найма от
+        kworks_filter_from - Количество предложений от (не включительно)
+        kworks_filter_to - Количество предложений до (включительно)
+        page - Страница выдачи
+        query - Поисковая строка
+        """
 
         raw_projects = await self.api_request(
             method="post",
             api_method="projects",
             categories=",".join(str(category) for category in categories_ids),
+            price_from=price_from,
+            price_to=price_to,
+            hiring_from=hiring_from,
+            kworks_filter_from=kworks_filter_from,
+            kworks_filter_to=kworks_filter_to,
+            page=page,
+            query=query,
             token=await self.token,
         )
         projects = []

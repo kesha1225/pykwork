@@ -21,4 +21,3 @@ class PortfolioItem(BaseModel):
     images: List[Dict] = None
     videos: List[Dict] = None
     duplicate_from: str = None
-
