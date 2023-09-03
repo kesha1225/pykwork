@@ -45,7 +45,7 @@ class KworkObject(BaseModel):
     lang: str = None
     worker: Worker = None
     activity: Activity = None
-    edits_list: Optional[str] = None  # TODO: что тут
+    edits_list: Optional[list] = None
     profile_sort: int = None
     is_subscription: bool = Field(None, alias="isSubscription")
     badges: List = None  # TODO: что тут
