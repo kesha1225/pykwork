@@ -1,6 +1,7 @@
-from pydantic import BaseModel
-import typing
 import asyncio
+import typing
+
+from pydantic.v1 import BaseModel
 
 
 class MessageModel(BaseModel):

@@ -1,6 +1,6 @@
-from typing import Optional, List
+from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic.v1 import BaseModel, Field
 
 from kwork.types.achievement import Achievement
 from kwork.types.kwork_object import KworkObject
