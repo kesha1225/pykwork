@@ -1,5 +1,6 @@
 import typing
-import pydantic
+
+import pydantic.v1 as pydantic
 
 
 class Achievements(pydantic.BaseModel):

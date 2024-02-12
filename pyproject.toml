@@ -5,9 +5,9 @@ description = "simple async wrapper for kwork.ru"
 authors = ["kesha1225"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 aiohttp = "^3.6.2"
-pydantic = "^1.4"
+pydantic = "^2.5.3"
 websockets = "^9.1"
 
 [tool.poetry.dev-dependencies]

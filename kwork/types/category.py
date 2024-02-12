@@ -1,6 +1,6 @@
 import typing
 
-from pydantic import BaseModel, validator
+from pydantic.v1 import BaseModel, validator
 
 
 class Subcategory(BaseModel):
