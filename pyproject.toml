@@ -8,13 +8,14 @@ authors = [
     {name = "kesha1225"},
     {name = "iamlostshe", email = "vanamelcikov7275@gmail.com"},
 ]
+dependencies = [
+    "aiohttp>=3.8.6",
+    "pydantic>=2.5.3",
+    "websockets>=11.0.3",
+]
 
 [project.urls]
 Homepage = "https://github.com/kesha1225/pykwork"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
 
 [tool.ruff.lint]
 select = ["ALL"]

@@ -23,7 +23,7 @@ await self.api_request(
 Последняя версия (рекомендуется):
 
 ``` sh
-pip install https://github.com/kesha1225/pykwork
+uv add git+https://github.com/iamlostshe/pykwork
 ```
 
 Версия на pypi (может быть устаревшей):
