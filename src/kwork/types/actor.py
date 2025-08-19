@@ -1,11 +1,14 @@
-from typing import Optional, List
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, Field
 
-from kwork.types.achievement import Achievement
-from kwork.types.kwork_object import KworkObject
-from kwork.types.portfolio import PortfolioItem
-from kwork.types.review import Review
+if TYPE_CHECKING:
+    from kwork.types.achievement import Achievement
+    from kwork.types.kwork_object import KworkObject
+    from kwork.types.portfolio import PortfolioItem
+    from kwork.types.review import Review
 
 
 class Actor(BaseModel):
@@ -37,8 +40,8 @@ class Actor(BaseModel):
     warning_inbox_count: int = None
     app_notify_count: int = None
     unread_messages_count: int = None
-    fullname_en: Optional[str] = Field(None, alias="fullnameEn")
-    description_en: Optional[str] = Field(None, alias="descriptionEn")
+    fullname_en: str | None = Field(None, alias="fullnameEn")
+    description_en: str | None = Field(None, alias="descriptionEn")
     country_id: int = None
     city_id: int = None
     timezone_id: int = None
@@ -48,20 +51,21 @@ class Actor(BaseModel):
     kworks_count: int = None
     favourite_kworks_count: int = None
     hidden_kworks_count: int = None
-    specialization: Optional[str] = None
-    profession: Optional[str] = None
+    specialization: str | None = None
+    profession: str | None = None
     kworks_available_at_weekends: bool = None
-    achievments_list: List[Achievement] = None
+    achievments_list: list[Achievement] = None
     completed_orders_count: int = None
-    kworks: List[KworkObject] = None
-    portfolio_list: List[PortfolioItem] = None
-    reviews: Optional[List[Review]] = None
+    kworks: list[KworkObject] = None
+    portfolio_list: list[PortfolioItem] = None
+    reviews: list[Review] | None = None
     worker_status: str = None
     has_offers: bool = None
     wants_count: int = None
     offers_count: int = None
     archived_wants_count: int = None
     push_notifications_sound_allowed: bool = Field(
-        None, alias="pushNotificationsSoundAllowed"
+        None,
+        alias="pushNotificationsSoundAllowed",
     )
     black_friday_for_sellers: bool = None

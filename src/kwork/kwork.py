@@ -1,20 +1,23 @@
+from __future__ import annotations
+
+import asyncio
+import collections
 import json
 import logging
-import asyncio
 import urllib.parse
-import collections
-from typing import Optional, Union
 
-import websockets
 import aiohttp
+import websockets
 
-from .types import Message, Actor, EventType, BaseEvent, Notify
+from kwork.exceptions import KworkBotException, KworkException
+
+from .types import Actor, BaseEvent, EventType, Message, Notify
 from .types.all import *
-from kwork.exceptions import KworkException, KworkBotException
 
 logger = logging.getLogger(__name__)
 Handler = collections.namedtuple(
-    "Handler", ["func", "text", "on_start", "text_contains"]
+    "Handler",
+    ["func", "text", "on_start", "text_contains"],
 )
 
 
@@ -25,16 +28,19 @@ class Kwork:
         password: str,
         proxy: typing.Optional[str] = None,
         phone_last: typing.Optional[str] = None,
-    ):
+    ) -> None:
         connector: typing.Optional[aiohttp.BaseConnector] = None
 
         if proxy is not None:
             try:
                 from aiohttp_socks import ProxyConnector
             except ImportError:
-                raise ImportError(
+                msg = (
                     "You have to install aiohttp_socks for using"
                     " proxy, make it by pip install aiohttp_socks"
+                )
+                raise ImportError(
+                    msg,
                 )
             connector = ProxyConnector.from_url(proxy)
 
@@ -52,11 +58,14 @@ class Kwork:
         return self._token
 
     async def api_request(
-        self, method: str, api_method: str, **params
+        self,
+        method: str,
+        api_method: str,
+        **params,
     ) -> typing.Union[dict, typing.NoReturn]:
         params = {k: v for k, v in params.items() if v is not None}
         logging.debug(
-            f"making {method} request on /{api_method} with params - {params}"
+            f"making {method} request on /{api_method} with params - {params}",
         )
         async with self.session.request(
             method=method,
@@ -88,28 +97,31 @@ class Kwork:
 
     async def get_me(self) -> Actor:
         actor = await self.api_request(
-            method="post", api_method="actor", token=await self.token
+            method="post",
+            api_method="actor",
+            token=await self.token,
         )
         return Actor(**actor["response"])
 
     async def get_user(self, user_id: int) -> User:
-        """
-        :param user_id: you can find it in dialogs
+        """:param user_id: you can find it in dialogs
         :return:
         """
         user = await self.api_request(
-            method="post", api_method="user", id=user_id, token=await self.token
+            method="post",
+            api_method="user",
+            id=user_id,
+            token=await self.token,
         )
         return User(**user["response"])
 
     async def set_typing(self, recipient_id: int) -> dict:
-        resp = await self.api_request(
+        return await self.api_request(
             method="post",
             api_method="typing",
             recipientId=recipient_id,
             token=await self.token,
         )
-        return resp
 
     async def get_all_dialogs(self) -> typing.List[DialogMessage]:
         page = 1
@@ -134,7 +146,9 @@ class Kwork:
 
     async def set_offline(self) -> dict:
         return await self.api_request(
-            method="post", api_method="offline", token=await self.token
+            method="post",
+            api_method="offline",
+            token=await self.token,
         )
 
     async def get_dialog_with_user(self, user_name: str) -> typing.List[InboxMessage]:
@@ -207,17 +221,16 @@ class Kwork:
 
     async def get_projects(
         self,
-        categories_ids: typing.List[Union[int, str]],
-        price_from: Optional[int] = None,
-        price_to: Optional[int] = None,
-        hiring_from: Optional[int] = None,
-        kworks_filter_from: Optional[int] = None,
-        kworks_filter_to: Optional[int] = None,
-        page: Optional[int] = None,
-        query: Optional[str] = None,
+        categories_ids: typing.List[int | str],
+        price_from: int | None = None,
+        price_to: int | None = None,
+        hiring_from: int | None = None,
+        kworks_filter_from: int | None = None,
+        kworks_filter_to: int | None = None,
+        page: int | None = None,
+        query: str | None = None,
     ) -> typing.List[WantWorker]:
-        """
-        categories_ids - Список ID рубрик через запятую, либо 'all' - для выборки по всем рубрикам.
+        """categories_ids - Список ID рубрик через запятую, либо 'all' - для выборки по всем рубрикам.
          С пустым значением делает выборку по любимым рубрикам.
         price_from - Бюджет от (включительно)
         price_to - Бюджет до (включительно)
@@ -225,9 +238,8 @@ class Kwork:
         kworks_filter_from - Количество предложений от (не включительно)
         kworks_filter_to - Количество предложений до (включительно)
         page - Страница выдачи
-        query - Поисковая строка
+        query - Поисковая строка.
         """
-
         raw_projects = await self.api_request(
             method="post",
             api_method="projects",
@@ -249,7 +261,9 @@ class Kwork:
 
     async def _get_channel(self) -> str:
         channel = await self.api_request(
-            method="post", api_method="getChannel", token=await self.token
+            method="post",
+            api_method="getChannel",
+            token=await self.token,
         )
         return channel["response"]["channel"]
 
@@ -275,7 +289,7 @@ class Kwork:
 
 
 class KworkBot(Kwork):
-    def __init__(self, login: str, password: str, proxy: str = None):
+    def __init__(self, login: str, password: str, proxy: str | None = None) -> None:
         super().__init__(login, password, proxy)
         self._handlers: typing.List[Handler] = []
 
@@ -336,7 +350,7 @@ class KworkBot(Kwork):
                             # TODO: вынести логику
                             message_raw: InboxMessage = (
                                 await self.get_dialog_with_user(
-                                    event.data["dialog_data"][0]["login"]
+                                    event.data["dialog_data"][0]["login"],
                                 )
                             )[0]
 
@@ -358,7 +372,7 @@ class KworkBot(Kwork):
                     elif event.event == EventType.POP_UP_NOTIFY:
                         message_raw: InboxMessage = (
                             await self.get_dialog_with_user(
-                                event.data["pop_up_notify"]["data"]["username"]
+                                event.data["pop_up_notify"]["data"]["username"],
                             )
                         )[0]
                         message: Message = Message(
@@ -370,7 +384,7 @@ class KworkBot(Kwork):
                         )
                         yield message
             except KworkException as e:
-                logging.error(f"Get error in polling - {e}, restarting")
+                logging.exception(f"Get error in polling - {e}, restarting")
                 await asyncio.sleep(10)
 
     @staticmethod
@@ -382,7 +396,9 @@ class KworkBot(Kwork):
         return False
 
     async def _dispatch_message(
-        self, message: Message, handler: Handler
+        self,
+        message: Message,
+        handler: Handler,
     ) -> typing.Optional[typing.Callable]:
         if not any([handler.on_start, handler.text, handler.text_contains]):
             return handler.func
@@ -396,19 +412,23 @@ class KworkBot(Kwork):
             handler is not None
             and handler.text is not None
             and handler.text.lower() == message.text.lower()
-        ):
-            return handler.func
-        elif handler.text_contains is not None and self._dispatch_text_contains(
-            handler.text_contains, message.text
+        ) or (
+            handler.text_contains is not None
+            and self._dispatch_text_contains(
+                handler.text_contains,
+                message.text,
+            )
         ):
             return handler.func
         return None
 
     def message_handler(
-        self, text: str = None, on_start: bool = False, text_contains: str = None
+        self,
+        text: str | None = None,
+        on_start: bool = False,
+        text_contains: str | None = None,
     ):
-        """
-        :param text: answer on exact match of message
+        """:param text: answer on exact match of message
         :param on_start: answer only on fist message in dialog
         :param text_contains: answer if message contains this text
         :return:
@@ -421,9 +441,10 @@ class KworkBot(Kwork):
 
         return decorator
 
-    async def run_bot(self):
+    async def run_bot(self) -> None:
         if not self._handlers:
-            raise KworkBotException("You have to create handler")
+            msg = "You have to create handler"
+            raise KworkBotException(msg)
         logging.info("Bot is running!")
         async for message in self.listen_messages():
             for handler in self._handlers:

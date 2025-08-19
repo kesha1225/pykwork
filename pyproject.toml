@@ -5,8 +5,8 @@ description = "Simple async wrapper for kwork."
 readme = "README.md"
 requires-python = ">=3.7"
 authors = [
-  {name = "kesha1225"},
-  {name = "iamlostshe", email = "vanamelcikov7275@gmail.com"},
+    {name = "kesha1225"},
+    {name = "iamlostshe", email = "vanamelcikov7275@gmail.com"},
 ]
 
 [project.urls]
@@ -15,3 +15,19 @@ Homepage = "https://github.com/kesha1225/pykwork"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    # Ошибки связанные с кирилицей
+    "RUF001", "RUF002", "RUF003",
+
+    # TODO
+    "TD003", "FIX002",
+
+    # Cравнение магических значений
+    "PLR2004",
+
+    # Работа с датой
+    "DTZ005",
+]

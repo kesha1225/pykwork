@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from pydantic import BaseModel
 
@@ -21,7 +21,7 @@ class Review(BaseModel):
     id: int = None
     time_added: int = None
     text: str = None
-    auto_mode: Optional[str] = None
+    auto_mode: str | None = None
     good: bool = None
     bad: bool = None
     kwork: KworkMinObject = None

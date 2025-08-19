@@ -1,7 +1,8 @@
+import asyncio
+import logging
+
 from kwork import KworkBot
 from kwork.types import Message
-import logging
-import asyncio
 
 logging.basicConfig(level=logging.INFO)
 
@@ -13,9 +14,8 @@ bot = KworkBot(login="login", password="password")
 
 
 @bot.message_handler(on_start=True)
-async def simple_handle(message: Message):
-    """
-    Отвечаем только если это первое сообщение от юзера
+async def simple_handle(message: Message) -> None:
+    """Отвечаем только если это первое сообщение от юзера
     :param message:
     :return:
     """
@@ -29,9 +29,8 @@ async def simple_handle(message: Message):
 
 
 @bot.message_handler(text_contains="бот")
-async def bot_handler(message: Message):
-    """
-    Отвечаем если текст сообщения содержит слово бот
+async def bot_handler(message: Message) -> None:
+    """Отвечаем если текст сообщения содержит слово бот
     :param message:
     :return:
     """
@@ -40,9 +39,8 @@ async def bot_handler(message: Message):
 
 
 @bot.message_handler(text="привет")
-async def bot_handler(message: Message):
-    """
-    Отвечаем только если текст такой же как параметр text
+async def bot_handler(message: Message) -> None:
+    """Отвечаем только если текст такой же как параметр text
     :param message:
     :return:
     """
@@ -50,9 +48,8 @@ async def bot_handler(message: Message):
     await message.answer_simulation(text)
 
 
-async def run():
-    """
-    Запускаем бота
+async def run() -> None:
+    """Запускаем бота
     :return:
     """
     await bot.run_bot()

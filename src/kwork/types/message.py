@@ -1,6 +1,8 @@
-from pydantic import BaseModel
-import typing
+from __future__ import annotations
+
 import asyncio
+
+from pydantic import BaseModel
 
 
 class MessageModel(BaseModel):
@@ -15,11 +17,11 @@ class MessageModel(BaseModel):
     message: str = None
     time: int = None
     unread: bool = None
-    type: typing.Optional[str] = None
+    type: str | None = None
     status: str = None
-    created_order_id: typing.Optional[str] = None
+    created_order_id: str | None = None
     forwarded: bool = None
-    updated_at: typing.Optional[int] = None
+    updated_at: int | None = None
     message_page: int = None
 
 
@@ -29,11 +31,11 @@ class Message:
         api,
         from_id: int,
         text: str,
-        to_user_id: typing.Optional[int] = None,
-        inbox_id: typing.Optional[int] = None,
-        last_message: typing.Optional[dict] = None,
-        title: typing.Optional[str] = None,
-    ):
+        to_user_id: int | None = None,
+        inbox_id: int | None = None,
+        last_message: dict | None = None,
+        title: str | None = None,
+    ) -> None:
         self.api = api
         self.from_id = from_id
         self.text = text
@@ -42,9 +44,8 @@ class Message:
         self.title = title
         self.last_message = last_message
 
-    async def answer_simulation(self, text: str):
-        """
-        realistic answer with typing simulation and waiting
+    async def answer_simulation(self, text: str) -> None:
+        """Realistic answer with typing simulation and waiting
         :param text:
         :return:
         """
@@ -53,5 +54,5 @@ class Message:
         await asyncio.sleep(2)
         await self.api.send_message(self.from_id, text=text)
 
-    async def fast_answer(self, text: str):
+    async def fast_answer(self, text: str) -> None:
         await self.api.send_message(self.from_id, text=text)

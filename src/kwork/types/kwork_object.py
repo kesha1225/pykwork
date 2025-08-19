@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
@@ -45,7 +45,7 @@ class KworkObject(BaseModel):
     lang: str = None
     worker: Worker = None
     activity: Activity = None
-    edits_list: Optional[list] = None
+    edits_list: list | None = None
     profile_sort: int = None
     is_subscription: bool = Field(None, alias="isSubscription")
-    badges: List = None  # TODO: что тут
+    badges: list = None  # TODO: что тут

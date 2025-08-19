@@ -1,8 +1,11 @@
-from typing import List
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from kwork.types.achievement import Achievement
+if TYPE_CHECKING:
+    from kwork.types.achievement import Achievement
 
 
 class Project(BaseModel):
@@ -21,7 +24,7 @@ class Project(BaseModel):
     category_base_price: int = None
     user_projects_count: int = None
     user_hired_percent: int = None
-    achievements_list: List[Achievement] = None
+    achievements_list: list[Achievement] = None
     is_viewed: bool = None
     already_work: int = None
     allow_higher_price: bool = None
