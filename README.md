@@ -5,7 +5,7 @@
 ## Установка
 
 ```bash
-pip install kwork
+uv add kwork
 ```
 
 или последняя версия:
