@@ -1,34 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "pykwork"
-version = "0.0.5"
+name = "kwork"
+version = "0.1.0"
 description = "Simple async wrapper for kwork."
 readme = "README.md"
-requires-python = ">=3.7"
+license = "MIT"
+requires-python = ">=3.14"
 authors = [
-    {name = "kesha1225"},
-    {name = "iamlostshe", email = "vanamelcikov7275@gmail.com"},
+    { name = "kesha1225" },
+]
+keywords = ["kwork", "freelance", "api", "async", "aiohttp", "bot"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Framework :: AsyncIO",
+    "Typing :: Typed",
 ]
 dependencies = [
-    "aiohttp>=3.8.6",
-    "pydantic>=2.5.3",
-    "websockets>=11.0.3",
+    "aiohttp>=3.13.2",
+    "pydantic>=2.12.5",
+    "websockets>=15.0.1",
+]
+
+[project.optional-dependencies]
+proxy = [
+    "aiohttp-socks>=0.10.2",
 ]
 
 [project.urls]
 Homepage = "https://github.com/kesha1225/pykwork"
+Repository = "https://github.com/kesha1225/pykwork"
+Issues = "https://github.com/kesha1225/pykwork/issues"
 
-[tool.ruff.lint]
-select = ["ALL"]
-ignore = [
-    # Ошибки связанные с кирилицей
-    "RUF001", "RUF002", "RUF003",
+[tool.setuptools]
+packages = ["kwork", "kwork.schema"]
 
-    # TODO
-    "TD003", "FIX002",
+[tool.setuptools.package-dir]
+kwork = "source"
+"kwork.schema" = "source/schema"
 
-    # Cравнение магических значений
-    "PLR2004",
+[tool.ruff]
+target-version = "py314"
+line-length = 100
 
-    # Работа с датой
-    "DTZ005",
+[dependency-groups]
+dev = [
+    "ruff>=0.14.7",
+    "basedpyright>=1.29.0",
 ]
+
+[tool.basedpyright]
+pythonVersion = "3.14"
+typeCheckingMode = "standard"
+reportMissingTypeArgument = "warning"
+reportUnknownArgumentType = false
+reportUnknownVariableType = false
+reportUnknownMemberType = false
+reportUnknownParameterType = false
+reportAny = false
+reportImplicitStringConcatenation = false
+reportUnannotatedClassAttribute = false

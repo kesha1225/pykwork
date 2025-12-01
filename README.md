@@ -1,163 +1,39 @@
 # pykwork
 
-Простая асинхронная обёртка над закрытым api фриланс биржи [kwork.ru](https://kwork.ru/)
-
-> Методы мобильного api доступны в открытом досупе.
->
-> 1. Откройте [openapi.json](https://cdn-edge.kwork.ru/js/openapi.json) и скопируйте содержимое.
-> 2. Откройте [swagger editor](https://gorbe.io/tools/swagger-editor/) и вставьте содержимое в окно редактора (справа).
-
-**Если нужного вам метода нет в классе или нет нужных параметров просто используйте api_request:**
-
-``` python
-await self.api_request(
-    method="post",
-    api_method="actor",
-    token=await self.token,
-)
-```
-
+Асинхронная обёртка над API фриланс-биржи [kwork.ru](https://kwork.ru/)
 
 ## Установка
 
-Последняя версия (рекомендуется):
-
-``` sh
-uv add git+https://github.com/iamlostshe/pykwork
-```
-
-Версия на pypi (может быть устаревшей):
-
-``` sh
+```bash
 pip install kwork
 ```
 
+или последняя версия:
 
-## Обзор
+```bash
+uv add git+https://github.com/kesha1225/pykwork
+```
 
-Список доступных методов можно посмотреть [здесь](./api_example.py)
+## Быстрый старт
 
-Пример простого api запроса:
-
-``` python
-from kwork import Kwork
-from kwork.types import Actor
-import logging
+```python
 import asyncio
-
-logging.basicConfig(level=logging.INFO)
-
+from kwork import Kwork
 
 async def main():
-    api = Kwork(
-        login="login",
-        password="password",
-    )
-    me: Actor = await api.get_me()
+    api = Kwork(login="login", password="password")
 
-    # Получение своего профиля
-    print(me)
-    await api.close()
+    try:
+        me = await api.get_me()
+        print(f"{me.username} | {me.free_amount} {me.currency}")
+    finally:
+        await api.close()
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+asyncio.run(main())
 ```
 
-### pykwork предоставляет возможность создания ботов для мгновенных ответов потециальным покупателям
+📖 **[Полный туториал](docs/tutorial.md)** — API, боты, прокси, примеры
 
-Пример бота с тремя хендлерами для ответов:
+## Contributors
 
-``` python
-from kwork import KworkBot
-from kwork.types import Message
-import logging
-import asyncio
-
-logging.basicConfig(level=logging.INFO)
-
-bot = KworkBot(login="login", password="password")
-
-@bot.message_handler(on_start=True)
-async def simple_handle(message: Message):
-    """
-    Отвечаем только если это первое сообщение от юзера
-    """
-    text = ("Здравствуйте, рад что вы обратились именно ко мне,"
-            " опишите ваше желание подробнее!")
-    await message.answer_simulation(text)
-
-
-@bot.message_handler(text_contains="бот")
-async def bot_handler(message: Message):
-    """
-    Отвечаем если текст сообщения содержит слово бот
-    """
-    text = "Вам нужен бот? Можете посмотреть на примеры уже сделанных:..."
-    await message.answer_simulation(text)
-
-
-@bot.message_handler(text="привет")
-async def bot_handler(message: Message):
-    """
-    Отвечаем только если текст такой же как параметр text
-    """
-    text = "И вам привет!"
-    await message.answer_simulation(text)
-
-
-async def run():
-    """
-    Запускаем бота
-    """
-    await bot.run_bot()
-
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(run())
-```
-
-## Примечание
-
-Получая ошибку "Подтвердите что вы не робот" просто ставьте прокси.
-
-Kwork может банить по ip, но в основном pykwork предотвращает это, даже
-если вас забанили, не пугайтесь, аккаунты они не банят, просто перезайдите
-с vpn/tor/proxy. Если вас каким то чудом забанили, но вам нужно продолжить использовать бота - воспользуйтесь прокси (socks5/socks4):
-
-``` python
-from kwork import Kwork
-from kwork.types import User, Actor
-import logging
-import asyncio
-
-logging.basicConfig(level=logging.INFO)
-
-
-async def main():
-    api = Kwork(
-        login="login",
-        password="password",
-        proxy="socks5://208.113.220.250:3420",
-    )
-
-    me: Actor = await api.get_me()
-    print(me)
-
-    await api.close()
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
-```
-
-Получая ошибку "Необходимо ввести последние 4 цифры номера телефона." используйте параметр phone_last
-
-``` python
-api = Kwork(
-    login="login",
-    password="password",
-    phone_last="0102",
-)
-```
-
-Если вдруг какие - то методы перестанут работать или работают неправильно -
-пишите отчёты в issue.
+- [@iamlostshe](https://github.com/iamlostshe)

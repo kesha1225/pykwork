@@ -1,39 +1,41 @@
-from __future__ import annotations
-
 import asyncio
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel
 
+if TYPE_CHECKING:
+    from kwork.client import KworkClient
+
 
 class MessageModel(BaseModel):
-    message_id: int = None
-    to_id: int = None
-    to_username: str = None
-    to_live_date: int = None
-    from_id: int = None
-    from_username: str = None
-    from_live_date: int = None
-    from_profilepicture: str = None
-    message: str = None
-    time: int = None
-    unread: bool = None
+    message_id: int | None = None
+    to_id: int | None = None
+    to_username: str | None = None
+    to_live_date: int | None = None
+    from_id: int | None = None
+    from_username: str | None = None
+    from_live_date: int | None = None
+    from_profilepicture: str | None = None
+    message: str | None = None
+    time: int | None = None
+    unread: bool | None = None
     type: str | None = None
-    status: str = None
+    status: str | None = None
     created_order_id: str | None = None
-    forwarded: bool = None
+    forwarded: bool | None = None
     updated_at: int | None = None
-    message_page: int = None
+    message_page: int | None = None
 
 
 class Message:
     def __init__(
         self,
-        api,
+        api: "KworkClient",
         from_id: int,
         text: str,
         to_user_id: int | None = None,
         inbox_id: int | None = None,
-        last_message: dict | None = None,
+        last_message: dict[str, Any] | None = None,
         title: str | None = None,
     ) -> None:
         self.api = api
@@ -45,10 +47,6 @@ class Message:
         self.last_message = last_message
 
     async def answer_simulation(self, text: str) -> None:
-        """Realistic answer with typing simulation and waiting
-        :param text:
-        :return:
-        """
         await asyncio.sleep(2)
         await self.api.set_typing(self.from_id)
         await asyncio.sleep(2)
