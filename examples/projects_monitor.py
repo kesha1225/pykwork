@@ -32,15 +32,11 @@ async def monitor(
 
 
 async def main() -> None:
-    api = Kwork(login="login", password="password")
-
-    try:
+    async with Kwork(login="login", password="password") as api:
         me = await api.get_me()
         log.info("Авторизован: %s", me.username)
 
         await monitor(api, categories_ids=[11, 79], interval=60, min_price=1000)
-    finally:
-        await api.close()
 
 
 if __name__ == "__main__":

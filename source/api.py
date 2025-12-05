@@ -1,5 +1,6 @@
 import logging
-from typing import Any
+from types import TracebackType
+from typing import Any, Self
 
 import aiohttp
 from kwork.exceptions import KworkException
@@ -47,6 +48,17 @@ class KworkAPI:
     async def close(self) -> None:
         if self._session is not None and not self._session.closed:
             await self._session.close()
+
+    async def __aenter__(self) -> Self:
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
+        await self.close()
 
     async def get_token(self) -> str:
         if self._token is not None:

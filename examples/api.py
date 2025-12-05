@@ -4,9 +4,7 @@ from kwork import Kwork
 
 
 async def main() -> None:
-    api = Kwork(login="login", password="password")
-
-    try:
+    async with Kwork(login="login", password="password") as api:
         me = await api.get_me()
         print(f"Авторизован: {me.username} | Баланс: {me.free_amount} {me.currency}")
 
@@ -27,8 +25,6 @@ async def main() -> None:
 
         notifications = await api.get_notifications()
         print(f"Уведомления: {notifications}")
-    finally:
-        await api.close()
 
 
 if __name__ == "__main__":

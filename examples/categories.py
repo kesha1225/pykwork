@@ -4,9 +4,7 @@ from kwork import Kwork
 
 
 async def main() -> None:
-    api = Kwork(login="login", password="password")
-
-    try:
+    async with Kwork(login="login", password="password") as api:
         categories = await api.get_categories()
 
         for parent in categories:
@@ -23,8 +21,6 @@ async def main() -> None:
             print(f"\nПроектов в категории: {len(projects)}")
             for p in projects[:3]:
                 print(f"  {p.title} | {p.price} руб. | {p.offers} предложений")
-    finally:
-        await api.close()
 
 
 if __name__ == "__main__":
