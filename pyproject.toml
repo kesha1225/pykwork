@@ -74,7 +74,7 @@ line-length = 100
 [dependency-groups]
 dev = [
     "ruff>=0.14.7",
-    "basedpyright>=1.29.0",
+    "basedpyright>=1.39.0",
     "pytest>=8.0.0",
 ]
 docs = [
