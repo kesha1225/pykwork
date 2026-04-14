@@ -75,7 +75,7 @@ line-length = 100
 dev = [
     "ruff>=0.14.7",
     "basedpyright>=1.29.0",
-    "pytest>=8.0.0",
+    "pytest>=9.0.3",
 ]
 docs = [
     "mkdocs>=1.6.0",
